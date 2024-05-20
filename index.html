@@ -10,13 +10,21 @@
             flex-direction: column;
             align-items: center;
             font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
         }
 
         .container {
             display: flex;
+            width: 100%;
+            justify-content: space-between;
+        }
+
+        .column {
+            display: flex;
             flex-direction: column;
             align-items: center;
-            margin-top: 20px;
+            width: 48%;
         }
 
         .box {
@@ -40,7 +48,7 @@
         table {
             margin-top: 20px;
             border-collapse: collapse;
-            width: 80%;
+            width: 100%;
         }
 
         table, th, td {
@@ -89,32 +97,36 @@
 <h1>Alpenglow Board Game Solo Helper</h1>
 
 <div class="container">
-    <div class="box" id="busStop">Bus Stop</div>
-    <div class="box" id="build">Build</div>
-    <div class="box" id="interact">Interact</div>
-    <button onclick="drawActions()">Draw</button>
+    <div class="column">
+        <h2>First Season Bus Route</h2>
+        <div class="grid-container" id="grid-container-1"></div>
+        <button id="draw-button-1" onclick="createBusRoute('grid-container-1')">Create Bus Route</button>
 
-    <table id="historyTable">
-        <thead>
-            <tr>
-                <th>#</th>
-                <th>Bus Stop</th>
-                <th>Build</th>
-                <th>Interact</th>
-                <th>Action</th>
-            </tr>
-        </thead>
-        <tbody>
-        </tbody>
-    </table>
+        <h2>Second Season Bus Route</h2>
+        <div class="grid-container" id="grid-container-2"></div>
+        <button id="draw-button-2" onclick="createBusRoute('grid-container-2')">Create Bus Route</button>
+    </div>
 
-    <h2>First Season Bus Route</h2>
-    <div class="grid-container" id="grid-container-1"></div>
-    <button id="draw-button-1" onclick="createBusRoute('grid-container-1')">Create Bus Route</button>
+    <div class="column">
+        <div class="box" id="busStop">Bus Stop</div>
+        <div class="box" id="build">Build</div>
+        <div class="box" id="interact">Interact</div>
+        <button onclick="drawActions()">Draw</button>
 
-    <h2>Second Season Bus Route</h2>
-    <div class="grid-container" id="grid-container-2"></div>
-    <button id="draw-button-2" onclick="createBusRoute('grid-container-2')">Create Bus Route</button>
+        <table id="historyTable">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Bus Stop</th>
+                    <th>Build</th>
+                    <th>Interact</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
 </div>
 
 <script>
