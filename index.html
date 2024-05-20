@@ -3,39 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Alpenglow Solo Mode Tool</title>
+    <title>Alpenglow Board Game Solo Helper</title>
     <style>
         body {
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
-            height: 100vh;
-            margin: 0;
             font-family: Arial, sans-serif;
         }
 
-        .grid-container {
-            display: grid;
-            grid-template-columns: repeat(5, 50px);
-            grid-template-rows: repeat(5, 50px);
-            gap: 2px;
-            margin-bottom: 20px;
-        }
-
-        .grid-cell {
-            width: 50px;
-            height: 50px;
-            background-color: lightgrey;
+        .container {
             display: flex;
+            flex-direction: column;
             align-items: center;
-            justify-content: center;
-            font-size: 20px;
-            user-select: none;
-        }
-
-        .highlighted {
-            background-color: yellow;
+            margin-top: 20px;
         }
 
         .box {
@@ -79,113 +60,69 @@
             cursor: pointer;
         }
 
-        .hidden {
-            display: none;
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(5, 50px);
+            grid-template-rows: repeat(5, 50px);
+            gap: 2px;
+            margin-top: 20px;
+        }
+
+        .grid-cell {
+            width: 50px;
+            height: 50px;
+            background-color: lightgrey;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            user-select: none;
+        }
+
+        .highlighted {
+            background-color: yellow;
         }
     </style>
 </head>
 <body>
 
+<h1>Alpenglow Board Game Solo Helper</h1>
+
 <div class="container">
-    <div id="grid-container" class="grid-container"></div>
+    <div class="box" id="busStop">Bus Stop</div>
+    <div class="box" id="build">Build</div>
+    <div class="box" id="interact">Interact</div>
+    <button onclick="drawActions()">Draw</button>
 
-    <div id="card-draw-container" class="hidden">
-        <div class="box" id="busStop">Bus Stop</div>
-        <div class="box" id="build">Build</div>
-        <div class="box" id="interact">Interact</div>
-        <button id="draw-button" onclick="drawActions()">Draw</button>
+    <table id="historyTable">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Bus Stop</th>
+                <th>Build</th>
+                <th>Interact</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
 
-        <table id="historyTable">
-            <thead>
-                <tr>
-                    <th>#</th>
-                    <th>Bus Stop</th>
-                    <th>Build</th>
-                    <th>Interact</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
-            </tbody>
-        </table>
-    </div>
+    <h2>First Season Bus Route</h2>
+    <div class="grid-container" id="grid-container-1"></div>
+    <button id="draw-button-1" onclick="createBusRoute('grid-container-1')">Create Bus Route</button>
+
+    <h2>Second Season Bus Route</h2>
+    <div class="grid-container" id="grid-container-2"></div>
+    <button id="draw-button-2" onclick="createBusRoute('grid-container-2')">Create Bus Route</button>
 </div>
 
-<button id="next-step-button" onclick="nextStep()">Next Step</button>
-
 <script>
-    let step = 1;
-    let drawCounter = 0;
-
     const busStopActions = ["1", "2", "3", "4"];
     const buildActions = ["Hut Highest VP", "Hut Player Base", "Hut Double", "Building", "Building x2", "Double Run (in display A/B/C/D)", "Chairlift Highest VP", "Chairlift Upgrade 2>4 or New 3", "Chairlift Towards player most runs", "Chairlift 2x Double", "Special Building"];
     const interactActions = ["Double Skiers", "Green Double", "Blue Double", "Black Double", "Orange Double", "Buddy Pass - Visit most lucrative player bus stop and gain double skier bonus, or place double run tile", "Backcountry - If possible, accomplish", "Visit Player Building in Route, Gain Skiers", "Swap Terminals 3/1 > 1/3", "Swap Terminals Player Highest VP > 1/3", "Partner Resort 1VP/Skier to Player", "Steal 2 Skiers", "Draw and Play Extra Solo Card", "Remove Run Player Base", "Remove Run Player Highest VP terminal"];
 
-    document.addEventListener('DOMContentLoaded', () => {
-        const gridContainer = document.getElementById('grid-container');
-        const gridSize = 5;
-        for (let i = 0; i < gridSize * gridSize; i++) {
-            const cell = document.createElement('div');
-            cell.className = 'grid-cell';
-            cell.dataset.index = i;
-            gridContainer.appendChild(cell);
-        }
-
-        document.getElementById('draw-button').addEventListener('click', drawActions);
-    });
-
-    function getRandomSnakeCells() {
-        const gridSize = 5;
-        let startRow = Math.floor(Math.random() * gridSize);
-        let startCol = Math.floor(Math.random() * gridSize);
-        let currentRow = startRow;
-        let currentCol = startCol;
-
-        const cells = [];
-        cells.push(currentRow * gridSize + currentCol);
-
-        for (let i = 1; i < 5; i++) {
-            let direction = getRandomDirection();
-            let newRow = currentRow + direction[0];
-            let newCol = currentCol + direction[1];
-
-            while (
-                newRow < 0 || newRow >= gridSize ||
-                newCol < 0 || newCol >= gridSize ||
-                cells.includes(newRow * gridSize + newCol)
-            ) {
-                direction = getRandomDirection();
-                newRow = currentRow + direction[0];
-                newCol = currentCol + direction[1];
-            }
-
-            currentRow = newRow;
-            currentCol = newCol;
-            cells.push(currentRow * gridSize + newCol);
-        }
-
-        return cells;
-    }
-
-    function getRandomDirection() {
-        const directions = [
-            [-1, 0], // up
-            [1, 0],  // down
-            [0, -1], // left
-            [0, 1]   // right
-        ];
-        return directions[Math.floor(Math.random() * directions.length)];
-    }
-
-    function highlightGrid() {
-        const cells = document.querySelectorAll('.grid-cell');
-        cells.forEach(cell => cell.classList.remove('highlighted'));
-
-        const highlightedCells = getRandomSnakeCells();
-        highlightedCells.forEach(index => {
-            cells[index].classList.add('highlighted');
-        });
-    }
+    let drawCounter = 0;
 
     function drawActions() {
         const busStop = busStopActions[Math.floor(Math.random() * busStopActions.length)];
@@ -228,20 +165,70 @@
         drawCounter = rows.length;
     }
 
-    function nextStep() {
-        if (step === 1 || step === 3) {
-            highlightGrid();
-            document.getElementById('grid-container').classList.remove('hidden');
-            document.getElementById('card-draw-container').classList.add('hidden');
-            document.getElementById('next-step-button').innerText = step === 1 ? 'Next Step: Draw Cards' : 'Next Step: Draw Cards for Season 2';
-        } else if (step === 2 || step === 4) {
-            document.getElementById('grid-container').classList.add('hidden');
-            document.getElementById('card-draw-container').classList.remove('hidden');
-            document.getElementById('next-step-button').innerText = step === 2 ? 'Next Step: Place Buses for Season 2' : 'Restart';
+    function createBusRoute(containerId) {
+        const gridContainer = document.getElementById(containerId);
+        const gridSize = 5;
+        const cells = gridContainer.getElementsByClassName('grid-cell');
+
+        if (cells.length === 0) {
+            // Create the 5x5 grid
+            for (let i = 0; i < gridSize * gridSize; i++) {
+                const cell = document.createElement('div');
+                cell.className = 'grid-cell';
+                cell.dataset.index = i;
+                gridContainer.appendChild(cell);
+            }
+        } else {
+            // Clear previous highlights
+            Array.from(cells).forEach(cell => cell.classList.remove('highlighted'));
         }
 
-        step++;
-        if (step > 4) step = 1; // Reset the steps after the fourth step
+        const highlightedCells = getRandomSnakeCells(gridSize);
+        highlightedCells.forEach(index => {
+            cells[index].classList.add('highlighted');
+        });
+    }
+
+    function getRandomSnakeCells(gridSize) {
+        let startRow = Math.floor(Math.random() * gridSize);
+        let startCol = Math.floor(Math.random() * gridSize);
+        let currentRow = startRow;
+        let currentCol = startCol;
+
+        const cells = [];
+        cells.push(currentRow * gridSize + currentCol);
+
+        for (let i = 1; i < 5; i++) {
+            let direction = getRandomDirection();
+            let newRow = currentRow + direction[0];
+            let newCol = currentCol + direction[1];
+
+            while (
+                newRow < 0 || newRow >= gridSize ||
+                newCol < 0 || newCol >= gridSize ||
+                cells.includes(newRow * gridSize + newCol)
+            ) {
+                direction = getRandomDirection();
+                newRow = currentRow + direction[0];
+                newCol = currentCol + direction[1];
+            }
+
+            currentRow = newRow;
+            currentCol = newCol;
+            cells.push(currentRow * gridSize + currentCol);
+        }
+
+        return cells;
+    }
+
+    function getRandomDirection() {
+        const directions = [
+            [-1, 0], // up
+            [1, 0],  // down
+            [0, -1], // left
+            [0, 1]   // right
+        ];
+        return directions[Math.floor(Math.random() * directions.length)];
     }
 </script>
 
