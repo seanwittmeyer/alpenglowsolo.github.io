@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Six-Pointed Star on Triangle Grid</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        .grid-container {
+            position: relative;
+            width: 300px;
+            height: 300px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .triangle {
+            width: 0;
+            height: 0;
+            border-left: 15px solid transparent;
+            border-right: 15px solid transparent;
+            border-bottom: 26px solid lightgrey;
+            margin: -6.5px 0;
+            position: relative;
+        }
+
+        .triangle.up {
+            transform: rotate(0deg);
+        }
+
+        .triangle.down {
+            transform: rotate(180deg);
+        }
+
+        .dot {
+            width: 6px;
+            height: 6px;
+            background-color: red;
+            border-radius: 50%;
+            position: absolute;
+        }
+    </style>
+</head>
+<body>
+    <div class="grid-container" id="grid-container"></div>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const gridContainer = document.getElementById('grid-container');
+
+            // Create the grid of triangles
+            const rows = 10;
+            const cols = 10;
+            const triangleHeight = 26;
+            const triangleWidth = 30;
+
+            for (let row = 0; row < rows; row++) {
+                for (let col = 0; col < cols; col++) {
+                    const triangle = document.createElement('div');
+                    triangle.classList.add('triangle');
+                    if ((row + col) % 2 === 0) {
+                        triangle.classList.add('up');
+                    } else {
+                        triangle.classList.add('down');
+                    }
+                    gridContainer.appendChild(triangle);
+                }
+            }
+
+            // Function to draw a dot
+            function drawDot(x, y) {
+                const dot = document.createElement('div');
+                dot.classList.add('dot');
+                dot.style.left = `${x}px`;
+                dot.style.top = `${y}px`;
+                gridContainer.appendChild(dot);
+            }
+
+            // Calculate the positions for the six-pointed star
+            const starCenterX = gridContainer.offsetWidth / 2;
+            const starCenterY = gridContainer.offsetHeight / 2;
+            const radius = triangleHeight * 2; // Adjust the radius as needed
+
+            const angles = [0, 60, 120, 180, 240, 300];
+            angles.forEach(angle => {
+                const rad = angle * (Math.PI / 180);
+                const x = starCenterX + radius * Math.cos(rad);
+                const y = starCenterY + radius * Math.sin(rad);
+                drawDot(x, y);
+            });
+
+            angles.forEach(angle => {
+                const rad = (angle + 180) * (Math.PI / 180);
+                const x = starCenterX + radius * Math.cos(rad);
+                const y = starCenterY + radius * Math.sin(rad);
+                drawDot(x, y);
+            });
+        });
+    </script>
+</body>
+</html>
