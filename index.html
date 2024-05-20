@@ -94,6 +94,12 @@
         .current {
             background-color: red;
         }
+
+        .marked {
+            background-color: yellow;
+            color: red;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
@@ -154,10 +160,10 @@
         addHistoryRow(busStop, build, interact);
 
         if (drawCounter <= 5) {
-            updateCurrentHighlight('grid-container-1', drawCounter - 1, currentSeason1Index);
+            updateCurrentHighlight('grid-container-1', currentSeason1Index);
             currentSeason1Index = drawCounter - 1;
         } else {
-            updateCurrentHighlight('grid-container-2', drawCounter - 6, currentSeason2Index);
+            updateCurrentHighlight('grid-container-2', currentSeason2Index);
             currentSeason2Index = drawCounter - 6;
         }
     }
@@ -206,7 +212,7 @@
             }
         } else {
             // Clear previous highlights
-            Array.from(cells).forEach(cell => cell.classList.remove('highlighted', 'current'));
+            Array.from(cells).forEach(cell => cell.classList.remove('highlighted', 'current', 'marked'));
         }
 
         const highlightedCells = getRandomSnakeCells(gridSize);
@@ -215,17 +221,20 @@
         });
     }
 
-    function updateCurrentHighlight(containerId, newIndex, currentIndex) {
+    function updateCurrentHighlight(containerId, currentIndex) {
         const gridContainer = document.getElementById(containerId);
         const cells = gridContainer.getElementsByClassName('grid-cell');
 
         if (currentIndex !== -1) {
             cells[currentIndex].classList.remove('current');
+            cells[currentIndex].classList.add('marked');
+            cells[currentIndex].innerText = 'X';
         }
 
-        if (newIndex !== -1) {
-            cells[newIndex].classList.add('current');
-        }
+        const highlightedCells = Array.from(cells).filter(cell => cell.classList.contains('highlighted'));
+        const newIndex = highlightedCells[Math.floor(Math.random() * highlightedCells.length)].dataset.index;
+
+        cells[newIndex].classList.add('current');
     }
 
     function getRandomSnakeCells(gridSize) {
