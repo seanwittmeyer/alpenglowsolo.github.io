@@ -17,6 +17,7 @@
             position: relative;
             width: 400px;
             height: 400px;
+            background-color: white;
         }
         .vertex {
             position: absolute;
@@ -25,14 +26,23 @@
             background-color: red;
             border-radius: 50%;
         }
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
     </style>
 </head>
 <body>
-    <div id="hexagram"></div>
+    <div id="hexagram">
+        <canvas id="hexagramCanvas" width="400" height="400"></canvas>
+    </div>
     <script>
         const hexagram = document.getElementById('hexagram');
-        const centerX = hexagram.clientWidth / 2;
-        const centerY = hexagram.clientHeight / 2;
+        const canvas = document.getElementById('hexagramCanvas');
+        const ctx = canvas.getContext('2d');
+        const centerX = canvas.width / 2;
+        const centerY = canvas.height / 2;
         const radius = 150;
 
         const vertices = [
@@ -57,11 +67,26 @@
             {x: -0.25, y: 0.433},
         ];
 
+        // Draw the lines
+        ctx.beginPath();
+        vertices.forEach((vertex, index) => {
+            const nextVertex = vertices[(index + 1) % vertices.length];
+            const x1 = centerX + vertex.x * radius;
+            const y1 = centerY - vertex.y * radius;
+            const x2 = centerX + nextVertex.x * radius;
+            const y2 = centerY - nextVertex.y * radius;
+            ctx.moveTo(x1, y1);
+            ctx.lineTo(x2, y2);
+        });
+        ctx.strokeStyle = 'black';
+        ctx.stroke();
+
+        // Draw the vertices
         vertices.forEach(vertex => {
             const dot = document.createElement('div');
             dot.classList.add('vertex');
-            dot.style.left = `${centerX + vertex.x * radius}px`;
-            dot.style.top = `${centerY - vertex.y * radius}px`;
+            dot.style.left = `${centerX + vertex.x * radius - 5}px`;
+            dot.style.top = `${centerY - vertex.y * radius - 5}px`;
             hexagram.appendChild(dot);
         });
     </script>
