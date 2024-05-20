@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Alpenglow Solo Helper</title>
+    <title>AI Action Drawer</title>
     <style>
         .container {
             display: flex;
@@ -24,6 +24,25 @@
             padding: 10px 20px;
             font-size: 16px;
         }
+        table {
+            margin-top: 20px;
+            border-collapse: collapse;
+            width: 80%;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        th, td {
+            padding: 10px;
+            text-align: center;
+        }
+        .delete-btn {
+            background-color: red;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
@@ -33,17 +52,68 @@
     <div class="box" id="build">Build</div>
     <div class="box" id="interact">Interact</div>
     <button onclick="drawActions()">Draw</button>
+
+    <table id="historyTable">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Bus Stop</th>
+                <th>Build</th>
+                <th>Interact</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
 </div>
 
 <script>
-    const busStopActions = ["A", "B", "C", "D"];
+    const busStopActions = ["1", "2", "3", "4"];
     const buildActions = ["Hut Highest VP", "Hut Player Base", "Hut Double", "Building", "Building x2", "Double Run (in display A/B/C/D)", "Chairlift Highest VP", "Chairlift Upgrade 2>4 or New 3", "Chairlift Towards player most runs", "Chairlift 2x Double", "Special Building"];
     const interactActions = ["Double Skiers", "Green Double", "Blue Double", "Black Double", "Orange Double", "Buddy Pass - Visit most lucrative player bus stop and gain double skier bonus, or place double run tile", "Backcountry - If possible, accomplish", "Visit Player Building in Route, Gain Skiers", "Swap Terminals 3/1 > 1/3", "Swap Terminals Player Highest VP > 1/3", "Partner Resort 1VP/Skier to Player", "Steal 2 Skiers", "Draw and Play Extra Solo Card", "Remove Run Player Base", "Remove Run Player Highest VP terminal"];
 
+    let drawCounter = 0;
+
     function drawActions() {
-        document.getElementById('busStop').innerText = busStopActions[Math.floor(Math.random() * busStopActions.length)];
-        document.getElementById('build').innerText = buildActions[Math.floor(Math.random() * buildActions.length)];
-        document.getElementById('interact').innerText = interactActions[Math.floor(Math.random() * interactActions.length)];
+        const busStop = busStopActions[Math.floor(Math.random() * busStopActions.length)];
+        const build = buildActions[Math.floor(Math.random() * buildActions.length)];
+        const interact = interactActions[Math.floor(Math.random() * interactActions.length)];
+
+        document.getElementById('busStop').innerText = busStop;
+        document.getElementById('build').innerText = build;
+        document.getElementById('interact').innerText = interact;
+
+        addHistoryRow(busStop, build, interact);
+    }
+
+    function addHistoryRow(busStop, build, interact) {
+        drawCounter++;
+        const table = document.getElementById('historyTable').getElementsByTagName('tbody')[0];
+        const newRow = table.insertRow(0);
+
+        newRow.insertCell(0).innerText = drawCounter;
+        newRow.insertCell(1).innerText = busStop;
+        newRow.insertCell(2).innerText = build;
+        newRow.insertCell(3).innerText = interact;
+
+        const deleteCell = newRow.insertCell(4);
+        const deleteButton = document.createElement('button');
+        deleteButton.innerText = 'Delete';
+        deleteButton.className = 'delete-btn';
+        deleteButton.onclick = function() {
+            table.deleteRow(newRow.rowIndex - 1);
+            updateDrawCounter();
+        };
+        deleteCell.appendChild(deleteButton);
+    }
+
+    function updateDrawCounter() {
+        const rows = document.getElementById('historyTable').getElementsByTagName('tbody')[0].rows;
+        for (let i = 0; i < rows.length; i++) {
+            rows[i].cells[0].innerText = rows.length - i;
+        }
+        drawCounter = rows.length;
     }
 </script>
 
