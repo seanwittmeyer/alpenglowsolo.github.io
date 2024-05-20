@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grid Highlighter</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(5, 50px);
+            grid-template-rows: repeat(5, 50px);
+            gap: 2px;
+        }
+
+        .grid-cell {
+            width: 50px;
+            height: 50px;
+            background-color: lightgrey;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            user-select: none;
+        }
+
+        .highlighted {
+            background-color: yellow;
+        }
+
+        button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="grid-container" id="grid-container"></div>
+    <button id="draw-button">Draw</button>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const gridContainer = document.getElementById('grid-container');
+            const drawButton = document.getElementById('draw-button');
+
+            // Create the 5x5 grid
+            const gridSize = 5;
+            for (let i = 0; i < gridSize * gridSize; i++) {
+                const cell = document.createElement('div');
+                cell.className = 'grid-cell';
+                cell.dataset.index = i;
+                gridContainer.appendChild(cell);
+            }
+
+            drawButton.addEventListener('click', () => {
+                const cells = document.querySelectorAll('.grid-cell');
+                cells.forEach(cell => cell.classList.remove('highlighted'));
+
+                const highlightedCells = getRandomAdjacentCells();
+                highlightedCells.forEach(index => {
+                    cells[index].classList.add('highlighted');
+                });
+            });
+
+            function getRandomAdjacentCells() {
+                let startRow = Math.floor(Math.random() * (gridSize - 1));
+                let startCol = Math.floor(Math.random() * (gridSize - 1));
+
+                const cells = [];
+                for (let i = 0; i < 2; i++) {
+                    for (let j = 0; j < 2; j++) {
+                        cells.push((startRow + i) * gridSize + (startCol + j));
+                    }
+                }
+
+                // Add one more adjacent cell to make a total of 5 cells
+                const direction = Math.random() < 0.5 ? 'horizontal' : 'vertical';
+                if (direction === 'horizontal') {
+                    if (startCol > 0) {
+                        cells.push(startRow * gridSize + (startCol - 1));
+                    } else {
+                        cells.push(startRow * gridSize + (startCol + 2));
+                    }
+                } else {
+                    if (startRow > 0) {
+                        cells.push((startRow - 1) * gridSize + startCol);
+                    } else {
+                        cells.push((startRow + 2) * gridSize + startCol);
+                    }
+                }
+
+                return cells;
+            }
+        });
+    </script>
+</body>
+</html>
