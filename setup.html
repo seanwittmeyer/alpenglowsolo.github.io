@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Six-Pointed Star on Triangle Grid</title>
+    <title>Setup</title>
     <style>
         body {
             display: flex;
@@ -17,8 +17,8 @@
 
         .grid-container {
             position: relative;
-            width: 300px;
-            height: 300px;
+            width: 500px;
+            height: 500px;
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
@@ -58,8 +58,8 @@
             const gridContainer = document.getElementById('grid-container');
 
             // Create the grid of triangles
-            const rows = 10;
-            const cols = 10;
+            const rows = 15;
+            const cols = 15;
             const triangleHeight = 26;
             const triangleWidth = 30;
 
@@ -85,23 +85,22 @@
                 gridContainer.appendChild(dot);
             }
 
-            // Calculate the positions for the six-pointed star
+            // Calculate the positions for the magic hexagram
             const starCenterX = gridContainer.offsetWidth / 2;
             const starCenterY = gridContainer.offsetHeight / 2;
-            const radius = triangleHeight * 2; // Adjust the radius as needed
+            const radius = triangleHeight * 4; // Adjust the radius as needed
 
-            const angles = [0, 60, 120, 180, 240, 300];
-            angles.forEach(angle => {
-                const rad = angle * (Math.PI / 180);
-                const x = starCenterX + radius * Math.cos(rad);
-                const y = starCenterY + radius * Math.sin(rad);
-                drawDot(x, y);
-            });
+            const vertices = [
+                [0, -1], [1, -3], [2, -2], [3, -2], [4, -3],
+                [5, -1], [5, 1], [4, 3], [3, 2], [2, 2],
+                [1, 3], [0, 1], [-1, 3], [-2, 2], [-3, 2],
+                [-4, 3], [-5, 1], [-5, -1], [-4, -3], [-3, -2],
+                [-2, -2], [-1, -3]
+            ];
 
-            angles.forEach(angle => {
-                const rad = (angle + 180) * (Math.PI / 180);
-                const x = starCenterX + radius * Math.cos(rad);
-                const y = starCenterY + radius * Math.sin(rad);
+            vertices.forEach(([dx, dy]) => {
+                const x = starCenterX + radius * (dx / 5);
+                const y = starCenterY + radius * (dy / 5);
                 drawDot(x, y);
             });
         });
