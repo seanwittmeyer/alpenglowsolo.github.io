@@ -66,40 +66,52 @@
                 const cells = document.querySelectorAll('.grid-cell');
                 cells.forEach(cell => cell.classList.remove('highlighted'));
 
-                const highlightedCells = getRandomAdjacentCells();
+                const highlightedCells = getRandomSnakeCells();
                 highlightedCells.forEach(index => {
                     cells[index].classList.add('highlighted');
                 });
             });
 
-            function getRandomAdjacentCells() {
-                let startRow = Math.floor(Math.random() * (gridSize - 1));
-                let startCol = Math.floor(Math.random() * (gridSize - 1));
+            function getRandomSnakeCells() {
+                let startRow = Math.floor(Math.random() * gridSize);
+                let startCol = Math.floor(Math.random() * gridSize);
+                let currentRow = startRow;
+                let currentCol = startCol;
 
                 const cells = [];
-                for (let i = 0; i < 2; i++) {
-                    for (let j = 0; j < 2; j++) {
-                        cells.push((startRow + i) * gridSize + (startCol + j));
-                    }
-                }
+                cells.push(currentRow * gridSize + currentCol);
 
-                // Add one more adjacent cell to make a total of 5 cells
-                const direction = Math.random() < 0.5 ? 'horizontal' : 'vertical';
-                if (direction === 'horizontal') {
-                    if (startCol > 0) {
-                        cells.push(startRow * gridSize + (startCol - 1));
-                    } else {
-                        cells.push(startRow * gridSize + (startCol + 2));
+                for (let i = 1; i < 5; i++) {
+                    let direction = getRandomDirection();
+                    let newRow = currentRow + direction[0];
+                    let newCol = currentCol + direction[1];
+
+                    while (
+                        newRow < 0 || newRow >= gridSize ||
+                        newCol < 0 || newCol >= gridSize ||
+                        cells.includes(newRow * gridSize + newCol)
+                    ) {
+                        direction = getRandomDirection();
+                        newRow = currentRow + direction[0];
+                        newCol = currentCol + direction[1];
                     }
-                } else {
-                    if (startRow > 0) {
-                        cells.push((startRow - 1) * gridSize + startCol);
-                    } else {
-                        cells.push((startRow + 2) * gridSize + startCol);
-                    }
+
+                    currentRow = newRow;
+                    currentCol = newCol;
+                    cells.push(currentRow * gridSize + currentCol);
                 }
 
                 return cells;
+            }
+
+            function getRandomDirection() {
+                const directions = [
+                    [-1, 0], // up
+                    [1, 0],  // down
+                    [0, -1], // left
+                    [0, 1]   // right
+                ];
+                return directions[Math.floor(Math.random() * directions.length)];
             }
         });
     </script>
