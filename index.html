@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Alpenglow Solo Helper</title>
+    <style>
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 50px;
+        }
+        .box {
+            width: 300px;
+            height: 50px;
+            border: 1px solid black;
+            margin: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 16px;
+        }
+        button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="box" id="busStop">Bus Stop</div>
+    <div class="box" id="build">Build</div>
+    <div class="box" id="interact">Interact</div>
+    <button onclick="drawActions()">Draw</button>
+</div>
+
+<script>
+    const busStopActions = ["A", "B", "C", "D"];
+    const buildActions = ["Hut Highest VP", "Hut Player Base", "Hut Double", "Building", "Building x2", "Double Run (in display A/B/C/D)", "Chairlift Highest VP", "Chairlift Upgrade 2>4 or New 3", "Chairlift Towards player most runs", "Chairlift 2x Double", "Special Building"];
+    const interactActions = ["Double Skiers", "Green Double", "Blue Double", "Black Double", "Orange Double", "Buddy Pass - Visit most lucrative player bus stop and gain double skier bonus, or place double run tile", "Backcountry - If possible, accomplish", "Visit Player Building in Route, Gain Skiers", "Swap Terminals 3/1 > 1/3", "Swap Terminals Player Highest VP > 1/3", "Partner Resort 1VP/Skier to Player", "Steal 2 Skiers", "Draw and Play Extra Solo Card", "Remove Run Player Base", "Remove Run Player Highest VP terminal"];
+
+    function drawActions() {
+        document.getElementById('busStop').innerText = busStopActions[Math.floor(Math.random() * busStopActions.length)];
+        document.getElementById('build').innerText = buildActions[Math.floor(Math.random() * buildActions.length)];
+        document.getElementById('interact').innerText = interactActions[Math.floor(Math.random() * interactActions.length)];
+    }
+</script>
+
+</body>
+</html>
