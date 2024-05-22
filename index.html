@@ -226,8 +226,8 @@
         const cells = gridContainer.getElementsByClassName('grid-cell');
 
         if (currentIndex !== -1) {
-            cells[currentIndex].classList.remove('current');
             cells[currentIndex].innerText = 'X';
+            cells[currentIndex].classList.remove('highlighted', 'current');
         }
 
         const highlightedCells = Array.from(cells).filter(cell => cell.classList.contains('highlighted'));
