@@ -178,9 +178,9 @@
 
         if (drawCounter <= 5) {
             currentGrid = 'grid-container-1';
-        } else if (drawCounter == 6) {
-            currentGrid = 'grid-container-2';
-            createBusRoute('grid-container-2');
+            if (drawCounter == 5) {
+                createBusRoute('grid-container-2');
+            }
         } else {
             currentGrid = 'grid-container-2';
         }
