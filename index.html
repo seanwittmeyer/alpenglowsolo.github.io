@@ -261,8 +261,7 @@
         const currentCells = gridContainer.getElementsByClassName('current');
 
         if (currentCells.length > 0) {
-            currentCells[0].classList.remove('current');
-            currentCells[0].classList.remove('highlighted');
+            currentCells[0].classList.remove('current','highlighted');
         }
 
         const highlightedCells = Array.from(gridContainer.getElementsByClassName('highlighted'));
