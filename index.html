@@ -258,13 +258,14 @@
 
     function updateCurrentCell() {
         const gridContainer = document.getElementById(currentGrid);
-        const highlightedCells = Array.from(gridContainer.getElementsByClassName('highlighted'));
         const currentCells = gridContainer.getElementsByClassName('current');
 
         if (currentCells.length > 0) {
             currentCells[0].classList.remove('current');
             currentCells[0].classList.remove('highlighted');
         }
+
+        const highlightedCells = Array.from(gridContainer.getElementsByClassName('highlighted'));
 
         if (highlightedCells.length > 0) {
             const randomCell = highlightedCells[Math.floor(Math.random() * highlightedCells.length)];
