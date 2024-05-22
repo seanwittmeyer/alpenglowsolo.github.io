@@ -90,16 +90,6 @@
         .highlighted {
             background-color: yellow;
         }
-
-        .current {
-            background-color: red;
-        }
-
-        .marked {
-            background-color: yellow;
-            color: red;
-            font-weight: bold;
-        }
     </style>
 </head>
 <body>
@@ -145,8 +135,6 @@
     const interactActions = ["Double Skiers", "Green Double", "Blue Double", "Black Double", "Orange Double", "Buddy Pass - Visit most lucrative player bus stop and gain double skier bonus, or place double run tile", "Backcountry - If possible, accomplish", "Visit Player Building in Route, Gain Skiers", "Swap Terminals 3/1 > 1/3", "Swap Terminals Player Highest VP > 1/3", "Partner Resort 1VP/Skier to Player", "Steal 2 Skiers", "Draw and Play Extra Solo Card", "Remove Run Player Base", "Remove Run Player Highest VP terminal"];
 
     let drawCounter = 0;
-    let currentSeason1Index = -1;
-    let currentSeason2Index = -1;
 
     function drawActions() {
         const busStop = busStopActions[Math.floor(Math.random() * busStopActions.length)];
@@ -158,14 +146,6 @@
         document.getElementById('interact').innerText = interact;
 
         addHistoryRow(busStop, build, interact);
-
-        if (drawCounter < 5) {
-            updateCurrentHighlight('grid-container-1', currentSeason1Index);
-            currentSeason1Index = getNewIndex('grid-container-1');
-        } else {
-            updateCurrentHighlight('grid-container-2', currentSeason2Index);
-            currentSeason2Index = getNewIndex('grid-container-2');
-        }
     }
 
     function addHistoryRow(busStop, build, interact) {
@@ -212,36 +192,13 @@
             }
         } else {
             // Clear previous highlights
-            Array.from(cells).forEach(cell => cell.classList.remove('highlighted', 'current', 'marked'));
+            Array.from(cells).forEach(cell => cell.classList.remove('highlighted'));
         }
 
         const highlightedCells = getRandomSnakeCells(gridSize);
         highlightedCells.forEach(index => {
             cells[index].classList.add('highlighted');
         });
-    }
-
-    function updateCurrentHighlight(containerId, currentIndex) {
-        const gridContainer = document.getElementById(containerId);
-        const cells = gridContainer.getElementsByClassName('grid-cell');
-
-        if (currentIndex !== -1) {
-            cells[currentIndex].innerText = 'X';
-            cells[currentIndex].classList.remove('highlighted', 'current');
-        }
-
-        const highlightedCells = Array.from(cells).filter(cell => cell.classList.contains('highlighted'));
-        const newIndex = highlightedCells[Math.floor(Math.random() * highlightedCells.length)].dataset.index;
-
-        cells[newIndex].classList.add('current');
-    }
-
-    function getNewIndex(containerId) {
-        const gridContainer = document.getElementById(containerId);
-        const cells = gridContainer.getElementsByClassName('grid-cell');
-        const highlightedCells = Array.from(cells).filter(cell => cell.classList.contains('highlighted'));
-
-        return highlightedCells[Math.floor(Math.random() * highlightedCells.length)].dataset.index;
     }
 
     function getRandomSnakeCells(gridSize) {
